@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Title</title>
+</head>
+
+<body>
+
+<!--&lt;!&ndash; Navigation &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">-->
+    <!--<div class="container">-->
+        <!--<a class="navbar-brand" href="#">Start Bootstrap</a>-->
+        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">-->
+            <!--<span class="navbar-toggler-icon"></span>-->
+        <!--</button>-->
+        <!--<div class="collapse navbar-collapse" id="navbarResponsive">-->
+            <!--<ul class="navbar-nav ml-auto">-->
+                <!--<li class="nav-item active">-->
+                    <!--<a class="nav-link" href="#">Home-->
+                        <!--<span class="sr-only">(current)</span>-->
+                    <!--</a>-->
+                <!--</li>-->
+                <!--<li class="nav-item">-->
+                    <!--<a class="nav-link" href="#">About</a>-->
+                <!--</li>-->
+                <!--<li class="nav-item">-->
+                    <!--<a class="nav-link" href="#">Services</a>-->
+                <!--</li>-->
+                <!--<li class="nav-item">-->
+                    <!--<a class="nav-link" href="#">Contact</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</nav>-->
+
+<!--&lt;!&ndash; Page Content &ndash;&gt;-->
+<!--<div class="container">-->
+    <!--<div class="row">-->
+        <!--<div class="col-lg-12 text-center">-->
+            <!--<h1 class="mt-5">A Bootstrap 4 Starter Template</h1>-->
+            <!--<p class="lead">Complete with pre-defined file paths and responsive navigation!</p>-->
+            <!--<ul class="list-unstyled">-->
+                <!--<li>Bootstrap 4.3.1</li>-->
+                <!--<li>jQuery 3.4.1</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<h2>TRAJECTORIES</h2>
+<table border="1">
+    <tr>
+        <th>USERID</th>
+        <th>TRAJECTORYID</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>YEAR</th>
+        <th>MONTH</th>
+        <th>DAY</th>
+        <th>HOUR</th>
+        <th>MINUTE</th>
+        <th>SECOND</th>
+    </tr>
+    <tr th:each = "trajectory: ${trajList}">
+        <td th:text="${trajectory.id}"></td>
+        <td th:text="${trajectory.trajid}"></td>
+        <td th:text="${trajectory.x}"></td>
+        <td th:text="${trajectory.y}"></td>
+        <td th:text="${trajectory.year}"></td>
+        <td th:text="${trajectory.month}"></td>
+        <td th:text="${trajectory.day}"></td>
+        <td th:text="${trajectory.hour}"></td>
+        <td th:text="${trajectory.minute}"></td>
+        <td th:text="${trajectory.second}"></td>
+    </tr>
+</table>
+</body>
+</html>
