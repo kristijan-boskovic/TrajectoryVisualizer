@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico"/>
 
-    <title>Navbar Template for Bootstrap</title>
+    <title>Table</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
@@ -27,49 +27,41 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#" th:text="${username}">Project name</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">Dropdown <span class="caret"></span></a>
+                           aria-expanded="true">Studies<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
+                            <li><a href="#">Study #1</a></li>
+                            <li><a href="#">Study #2</a></li>
+                            <li><a href="#">Study #3</a></li>
                         </ul>
                     </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Static top</a></li>
-                    <li><a href="#/">Fixed top</a></li>
+                    <li><a href="#">About</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
     </nav>
 </div>
-<h2>TRAJECTORIES</h2>
-<table class="table table-striped">
+<div class="container">
+<h2>Trajectories</h2>
+<table class="table table-striped table-condensed">
     <tr>
-        <th>USER ID</th>
-        <th>TRAJECTORY ID</th>
-        <th>X</th>
-        <th>Y</th>
-        <th>YEAR</th>
-        <th>MONTH</th>
-        <th>DAY</th>
-        <th>HOUR</th>
-        <th>MINUTE</th>
-        <th>SECOND</th>
+        <th>User ID</th>
+        <th>Trajectory ID</th>
+        <th>X-coordinate</th>
+        <th>Y-coordinate</th>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Day</th>
+        <th>Hour</th>
+        <th>Minute</th>
+        <th>Second</th>
     </tr>
     <tr th:each = "trajectory: ${trajList}">
         <td th:text="${trajectory.id}"></td>
@@ -84,6 +76,7 @@
         <td th:text="${trajectory.second}"></td>
     </tr>
 </table>
+</div>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
