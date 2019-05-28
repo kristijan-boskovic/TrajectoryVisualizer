@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Controller
-public class TrajectoryController {
+public class TableController {
     @Autowired
     TrajectoryService trajectoryService;
 
-    @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/table", method = RequestMethod.GET)
 //    public List<Trajectory> getAllTrajectories() {
 //        return trajectoryService.getAllTrajectories();
 //    }
     public String getAllTrajectories(Model model) {
         List<Trajectory> trajList = trajectoryService.getAllTrajectories();
         model.addAttribute("trajList", trajList);
-        return "index";
+        return "table";
     }
 }
