@@ -1,7 +1,6 @@
-package com.example.springbootoracle.entity;
+package com.trajectoryvisualizer.entity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @IdClass(CompositeKey.class)

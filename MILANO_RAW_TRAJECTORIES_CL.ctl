@@ -1,0 +1,17 @@
+LOAD DATA
+INFILE 'C:\Users\Komp\Desktop\output.txt'
+TRUNCATE
+INTO TABLE MILANO_RAW
+fields terminated by "|"
+TRAILING NULLCOLS(
+	USERID,
+	TRAJECTORYID,
+	X,
+	Y,
+	YEAR,
+	MONTH,
+	DAY,
+	HOUR,
+	MINUTE,
+	SECOND
+)

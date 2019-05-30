@@ -1,6 +1,6 @@
-package com.example.springbootoracle.dao;
+package com.trajectoryvisualizer.dao;
 
-import com.example.springbootoracle.entity.Trajectory;
+import com.trajectoryvisualizer.entity.Trajectory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
-package com.example.springbootoracle.service;
+package com.trajectoryvisualizer.service;
 
-import com.example.springbootoracle.dao.TrajectoryDao;
-import com.example.springbootoracle.entity.Trajectory;
+import com.trajectoryvisualizer.dao.TrajectoryDao;
+import com.trajectoryvisualizer.entity.Trajectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

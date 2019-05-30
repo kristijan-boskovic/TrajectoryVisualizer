@@ -1,4 +1,4 @@
-package com.example.springbootoracle;
+package com.trajectoryvisualizer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
