@@ -1,2 +1,2 @@
 # TrajectoryVisualizer
-Thesis project @ FER (2018/19) - web
+Thesis project @ FER (2018/19)
