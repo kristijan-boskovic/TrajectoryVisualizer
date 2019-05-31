@@ -45,28 +45,21 @@
 <h2>Trajectories</h2>
 <table class="table table-striped table-condensed">
     <tr>
-        <th>User ID</th>
+        <th>Study ID</th>
         <th>Trajectory ID</th>
         <th>X-coordinate</th>
         <th>Y-coordinate</th>
-        <th>Year</th>
-        <th>Month</th>
-        <th>Day</th>
-        <th>Hour</th>
-        <th>Minute</th>
-        <th>Second</th>
+        <th>Longitude</th>
+        <th>Latitude</th>
+
     </tr>
     <tr th:each = "trajectory: ${trajList}">
-        <td th:text="${trajectory.id}"></td>
+        <td th:text="${trajectory.studyid}"></td>
         <td th:text="${trajectory.trajid}"></td>
         <td th:text="${trajectory.x}"></td>
         <td th:text="${trajectory.y}"></td>
-        <td th:text="${trajectory.year}"></td>
-        <td th:text="${trajectory.month}"></td>
-        <td th:text="${trajectory.day}"></td>
-        <td th:text="${trajectory.hour}"></td>
-        <td th:text="${trajectory.minute}"></td>
-        <td th:text="${trajectory.second}"></td>
+        <td th:text="${trajectory.longitude}"></td>
+        <td th:text="${trajectory.latitude}"></td>
     </tr>
 </table>
 </div>

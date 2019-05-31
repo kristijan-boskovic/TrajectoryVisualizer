@@ -4,14 +4,22 @@ import javax.persistence.*;
 
 @Entity
 @IdClass(CompositeKey.class)
-@Table(name = "MILANO_RAW")
-public class Trajectory {
-    @Column(name = "USERID", nullable = true, length = 38)
-    private Integer id;
+@Table(name = "RAW_STUDIES")
+public class RawStudies {
+    @Column(name = "STUDYID", nullable = true, length = 38)
+    private Integer studyid;
 
     @Column(name = "TRAJECTORYID", nullable = true, length = 38)
     @Id
     private Integer trajid;
+
+    @Column(name = "LONGITUDE", nullable = true, length = 22)
+    @Id
+    private double longitude;
+
+    @Column(name = "LATITUDE", nullable = true, length = 22)
+    @Id
+    private double latitude;
 
     @Column(name = "X", nullable = true, length = 22)
     @Id
@@ -39,13 +47,31 @@ public class Trajectory {
     @Column(name = "SECOND", nullable = true, length = 38)
     private Integer second;
 
-
-    public Integer getId() {
-        return id;
+    public RawStudies(Integer trajid, double longitude, double latitude, double x, double y, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
+        super();
+        this.trajid = trajid;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.x = x;
+        this.y = y;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public RawStudies() {
+        super();
+    }
+
+    public Integer getStudyid() {
+        return studyid;
+    }
+
+    public void setStudyid(Integer studyid) {
+        this.studyid = studyid;
     }
 
     public Integer getTrajid() {
@@ -56,19 +82,35 @@ public class Trajectory {
         this.trajid = trajid;
     }
 
-    public Double getX() {
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getX() {
         return x;
     }
 
-    public void setX(Double x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public Double getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(Double y) {
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -118,23 +160,5 @@ public class Trajectory {
 
     public void setSecond(Integer second) {
         this.second = second;
-    }
-
-    public Trajectory(Integer id, Integer trajid, Double x, Double y, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
-        super();
-        this.id = id;
-        this.trajid = trajid;
-        this.x = x;
-        this.y = y;
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.minute = minute;
-        this.second = second;
-    }
-
-    public Trajectory() {
-        super();
     }
 }

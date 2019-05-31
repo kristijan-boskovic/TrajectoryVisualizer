@@ -1,190 +1,177 @@
 package com.trajectoryvisualizer.util.traclus;
 
-import java.io.*;
+
+import com.trajectoryvisualizer.point.Geopoint;
+import com.trajectoryvisualizer.point.UTMPoint;
+import com.trajectoryvisualizer.user.Study;
+import com.trajectoryvisualizer.util.Util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 public class TraClusterDoc {
+	
+	public int m_nDimensions;
+	public int m_nTrajectories;
+	public int m_nClusters;
+	public double m_clusterRatio;
+	public int m_maxNPoints;
+	public ArrayList<Trajectory> m_trajectoryList;
+	public ArrayList<Cluster> m_clusterList;
+	
+	public TraClusterDoc() {
+			
+		m_nTrajectories = 0;
+		m_nClusters = 0;
+		m_clusterRatio = 0.0;	
+		m_trajectoryList = new ArrayList<Trajectory>();
+		m_clusterList = new ArrayList<Cluster>();
+	}
+	
+	public class Parameter {
+		double epsParam;
+		int minLnsParam;
+	}
+	
+	boolean onOpenDocument(HashMap<Integer, List<String>> trajectories) {
 
-    public int m_nDimensions;
-    public int m_nTrajectories;
-    public int m_nClusters;
-    public double m_clusterRatio;
-    public int m_maxNPoints;
-    public ArrayList<Trajectory> m_trajectoryList;
-    public ArrayList<Cluster> m_clusterList;
+		if(trajectories == null || trajectories.isEmpty()){
+			throw new IllegalArgumentException();
+		}
 
-    public TraClusterDoc() {
+		int nDimensions = 2;		// default dimension = 2
+		int nTotalPoints = 0;
+		int nTrajectories = 0;
+		int trajectoryId;
+		int nPoints;
+		double value;
 
-        m_nTrajectories = 0;
-        m_nClusters = 0;
-        m_clusterRatio = 0.0;
-        m_trajectoryList = new ArrayList<Trajectory>();
-        m_clusterList = new ArrayList<Cluster>();
-    }
+		try {
 
-    public class Parameter {
-        public double epsParam;
-        public int minLnsParam;
-    }
+			nDimensions = 2; // the number of dimensions
+			m_nDimensions = nDimensions;
 
-    public boolean onOpenDocument(HashMap<Integer, List<String>> trajectories) {
+			nTrajectories = trajectories.keySet().size();
+			m_nTrajectories = nTrajectories;
+			
+			m_maxNPoints = -1; // initialize for comparison
+			
+			// the trajectory Id, the number of points, the coordinate of a point ...
+			for (int i = 0; i < nTrajectories; i++) {
 
-        if(trajectories == null ||trajectories.isEmpty()){
-            throw new IllegalArgumentException();
-        }
+				String str = "";
+				List<String> points = trajectories.get(i);
 
-        int nDimensions = 2;		// default dimension = 2
-        int nTrajectories = 0;
-        int nTotalPoints = 0;		//no use
-        int trajectoryId;
-        int nPoints;
-        double value;
+				str += i + " " + points.size() / 2 + " ";
 
-        //DataInputStream in;
-        //BufferedReader inBuffer = null;
-        try {
-            //in = new DataInputStream(new BufferedInputStream(new FileInputStream(inputFileName)));
+				for(String point : points){
+					str += point + " ";
+				}
 
-            //inBuffer = new BufferedReader(new InputStreamReader(in));
-            nDimensions = 2; // the number of dimensions
-            m_nDimensions = nDimensions;
-            //nTrajectories = Integer.parseInt(inBuffer.readLine()); // the number of trajectories
-            nTrajectories = trajectories.keySet().size();
-            m_nTrajectories = nTrajectories;
+				Scanner sc = new Scanner(str); 
+				sc.useLocale(Locale.US);
+				
+				trajectoryId = sc.nextInt(); //trajectoryID
+				nPoints = sc.nextInt(); // number of points in the trajectory
+				
+				if (nPoints > m_maxNPoints) {
+					m_maxNPoints = nPoints;
+				}
+				nTotalPoints += nPoints;
+				Trajectory pTrajectoryItem = new Trajectory(trajectoryId, nDimensions);		
+				for (int j = 0; j < nPoints; j++) {
+					CMDPoint point = new CMDPoint(nDimensions);   // initialize the CMDPoint class for each point
+					
+					for (int k = 0; k < nDimensions; k++) {						
+						value = sc.nextDouble();
+						point.setM_coordinate(k, value);						
+					}
+					pTrajectoryItem.addPointToArray(point);				
+				}
+				
+				m_trajectoryList.add(pTrajectoryItem);
+			}					
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+        		
+		return true;
+	}
 
-            m_maxNPoints = -1; // initialize for comparison
+	boolean onClusterGenerate(String studyId, double epsParam, int minLnsParam) {
 
-            // the trajectory Id, the number of points, the coordinate of a point ...
-            for (int i = 0; i < nTrajectories; i++) {
+		ClusterGen generator = new ClusterGen(this);
 
-                //String str = inBuffer.readLine();
-                String str = "";
-                List<String> points = trajectories.get(i);
+		if(m_nTrajectories == 0) {
+			System.out.println("Load a trajectory data set first");
+		}
 
-                str += i + " " + points.size() / 2 + " ";
+		// FIRST STEP: Trajectory Partitioning
+		if (!generator.partitionTrajectory())
+		{
+			System.out.println("Unable to partition a trajectory\n");
+			return false;
+		}
 
-                for(String point : points){
-                    str += point + " ";
-                }
+		// SECOND STEP: Density-based Clustering
+		if (!generator.performDBSCAN(epsParam, minLnsParam))
+		{
+			System.out.println("Unable to perform the DBSCAN algorithm\n");
+			return false;
+		}
 
-                Scanner sc = new Scanner(str);
-                sc.useLocale(Locale.US);
+		// THIRD STEP: Cluster Construction
+		if (!generator.constructCluster())
+		{
+			System.out.println( "Unable to construct a cluster\n");
+			return false;
+		}
 
-                trajectoryId = sc.nextInt(); //trajectoryID
-                nPoints = sc.nextInt(); // number of points in the trajectory
+		try(Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + "orcl", "HERMES",
+				"HERMES")){
+			connection.prepareStatement("DELETE FROM Traclus_Studies WHERE studyid = " + studyId).execute();
+				Study study = Util.getStudy(Long.valueOf(studyId));
+				for (int i = 0; i < m_clusterList.size(); i++) {
+					int clusterId = m_clusterList.get(i).getM_clusterId();
 
-                if (nPoints > m_maxNPoints) {
-                    m_maxNPoints = nPoints;
-                }
-                nTotalPoints += nPoints;
-                Trajectory pTrajectoryItem = new Trajectory(trajectoryId, nDimensions);
-                for (int j = 0; j < nPoints; j++) {
-                    CMDPoint point = new CMDPoint(nDimensions);   // initialize the CMDPoint class for each point
+					for (int j = 0; j < m_clusterList.get(i).getM_PointArray().size(); j++) {
 
-                    for (int k = 0; k < nDimensions; k++) {
-                        value = sc.nextDouble();
-                        point.setM_coordinate(k, value);
-                    }
-                    pTrajectoryItem.addPointToArray(point);
-                }
+						double x = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(0);
+						double y = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(1);
 
-                m_trajectoryList.add(pTrajectoryItem);
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
+						Geopoint point = new UTMPoint(study.getZoneNumber(), study.getZoneLetter(), x, y).toLatLong();
 
-    public boolean onClusterGenerate(String clusterFileName, double epsParam, int minLnsParam) {
-//////////////////////////////////////////////////still to be written
+						String values = studyId + "," + clusterId + "," + point.getLongitude() + "," + point.getLatitude() + x + "," + y;
 
-        ClusterGen generator = new ClusterGen(this);
+						Statement statement = connection.createStatement();
+						statement.execute("INSERT INTO Traclus_Studies" + " VALUES (" + values + ")");
+						statement.close();
 
-        if(m_nTrajectories == 0) {
-            System.out.println("Load a trajectory data set first");
-        }
+					}
+				}
 
-        // FIRST STEP: Trajectory Partitioning
-        if (!generator.partitionTrajectory())
-        {
-            System.out.println("Unable to partition a trajectory\n");
-            return false;
-        }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 
-        // SECOND STEP: Density-based Clustering
-        if (!generator.performDBSCAN(epsParam, minLnsParam))
-        {
-            System.out.println("Unable to perform the DBSCAN algorithm\n");
-            return false;
-        }
+		return true;
+	}
+	
+	Parameter onEstimateParameter() {
+		Parameter p = new Parameter();
+		ClusterGen generator = new ClusterGen(this);
+		if (!generator.partitionTrajectory()) {
+			System.out.println("Unable to partition a trajectory\n");
+			return null;
+		}
+		if (!generator.estimateParameterValue(p)) {
+			System.out.println("Unable to calculate the entropy\n");
+			return null;
+		}
+		return p;
+	}
 
-        // THIRD STEP: Cluster Construction
-        if (!generator.constructCluster())
-        {
-            System.out.println( "Unable to construct a cluster\n");
-            return false;
-        }
-
-
-        for (int i = 0; i <m_clusterList.size(); i++) {
-            //m_clusterList.
-            System.out.println(m_clusterList.get(i).getM_clusterId());
-            for (int j = 0; j<m_clusterList.get(i).getM_PointArray().size(); j++) {
-
-                double x = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(0);
-                double y = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(1);
-                System.out.print("   "+ x +" "+ y +"   ");
-            }
-            System.out.println();
-        }
-        FileOutputStream fos = null;
-        BufferedWriter bw = null;
-        OutputStreamWriter osw = null;
-        try {
-            fos = new FileOutputStream(clusterFileName);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
-
-            bw.write("epsParam:"+epsParam +"   minLnsParam:"+minLnsParam);
-
-            for (int i = 0; i < m_clusterList.size(); i++) {
-                // m_clusterList.
-                bw.write("\nclusterID: "+ m_clusterList.get(i).getM_clusterId() + "  Points Number:  " + m_clusterList.get(i).getM_PointArray().size() + "\n");
-                for (int j = 0; j < m_clusterList.get(i).getM_PointArray().size(); j++) {
-
-                    double x = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(0);
-                    double y = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(1);
-                    bw.write(x+" "+y+"   ");
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }
-
-    public Parameter onEstimateParameter() {
-        Parameter p = new Parameter();
-        ClusterGen generator = new ClusterGen(this);
-        if (!generator.partitionTrajectory()) {
-            System.out.println("Unable to partition a trajectory\n");
-            return null;
-        }
-        if (!generator.estimateParameterValue(p)) {
-            System.out.println("Unable to calculate the entropy\n");
-            return null;
-        }
-        return p;
-    }
 }
-

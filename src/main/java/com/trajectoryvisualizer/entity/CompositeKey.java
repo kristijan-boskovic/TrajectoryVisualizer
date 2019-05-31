@@ -4,22 +4,24 @@ import java.io.Serializable;
 import java.util.Objects;
 
 class CompositeKey implements Serializable {
-    private Integer trajid;
-    private Double x;
-    private Double y;
+    private double longitude;
+    private double latitude;
+    private double x;
+    private double y;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof CompositeKey)) return false;
         CompositeKey that = (CompositeKey) o;
-        return trajid.equals(that.trajid) &&
-                x.equals(that.x) &&
-                y.equals(that.y);
+        return Double.compare(that.longitude, longitude) == 0 &&
+                Double.compare(that.latitude, latitude) == 0 &&
+                Double.compare(that.x, x) == 0 &&
+                Double.compare(that.y, y) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(trajid, x, y);
+        return Objects.hash(longitude, latitude, x, y);
     }
 }

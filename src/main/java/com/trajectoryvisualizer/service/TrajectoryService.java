@@ -1,7 +1,7 @@
 package com.trajectoryvisualizer.service;
 
 import com.trajectoryvisualizer.dao.TrajectoryDao;
-import com.trajectoryvisualizer.entity.Trajectory;
+import com.trajectoryvisualizer.entity.RawStudies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ public class TrajectoryService {
     @Autowired
     TrajectoryDao trajectoryDao;
 
-    public List<Trajectory> getAllTrajectories() {
+    public List<RawStudies> getAllTrajectories() {
         return this.trajectoryDao.findAll();
     }
 

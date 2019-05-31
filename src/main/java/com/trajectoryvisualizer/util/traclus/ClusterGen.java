@@ -1,5 +1,7 @@
 package com.trajectoryvisualizer.util.traclus;
 
+import com.trajectoryvisualizer.util.traclus.TraClusterDoc.Parameter;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +27,7 @@ public class ClusterGen {
 	
 	private ArrayList<LineSegmentId> m_idArray = new ArrayList<LineSegmentId>();
 	private ArrayList<CMDPoint> m_lineSegmentPointArray = new ArrayList<CMDPoint>();
-
+	
 	// used for performing the DBSCAN algorithm
 	public static final int UNCLASSIFIED = -2;
 	public static final int NOISE = -1;
@@ -34,27 +36,27 @@ public class ClusterGen {
 
 	private static final int MDL_COST_ADWANTAGE = 25;
 	private static final int INT_MAX = Integer.MAX_VALUE;
-	// used for InsertClusterPoint() and ReplaceClusterPoint()
+	// used for InsertClusterPoint() and ReplaceClusterPoint() 
 	enum PointLocation {
-		HEAD , TAIL
-	}
-
+		HEAD , TAIL		
+	}	
+	
 	class LineSegmentId {
-
+		
 		int trajectoryId;
-		int order;
+		int order;		
 	}
-
+	
 	class CandidateClusterPoint {
-
+		
 		double orderingValue;
 		int lineSegmentId;
 		boolean startPointFlag;
-
+		
 	}
-
+	
 	class LineSegmentCluster {
-
+		
 		int lineSegmentClusterId;
 		int nLineSegments;
 		CMDPoint avgDirectionVector;
@@ -874,7 +876,7 @@ public class ClusterGen {
 		}
 	}
 
-	public boolean estimateParameterValue(TraClusterDoc.Parameter p) {
+	public boolean estimateParameterValue(Parameter p) {
 		
 		double entropy, minEntropy = (double)INT_MAX;
 		double eps,minEps = (double)INT_MAX;
