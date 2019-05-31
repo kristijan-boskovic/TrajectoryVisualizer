@@ -1,2 +1,2 @@
-# spring-boot-oracle
+# TrajectoryVisualizer
 Thesis project @ FER (2018/19) - web
