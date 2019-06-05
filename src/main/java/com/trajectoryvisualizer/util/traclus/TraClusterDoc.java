@@ -101,7 +101,7 @@ public class TraClusterDoc {
 		return true;
 	}
 
-	boolean onClusterGenerate(String studyId, double epsParam, int minLnsParam) {
+	boolean onClusterGenerate(long studyId, double epsParam, int minLnsParam) {
 
 		ClusterGen generator = new ClusterGen(this);
 
@@ -132,7 +132,7 @@ public class TraClusterDoc {
 
 		try(Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + "orcl", "HERMES",
 				"HERMES")){
-			connection.prepareStatement("DELETE FROM Traclus_Studies WHERE studyid = " + studyId).execute();
+			connection.prepareStatement("DELETE FROM Traclus_Studies").execute();
 				Study study = Util.getStudy(Long.valueOf(studyId));
 				for (int i = 0; i < m_clusterList.size(); i++) {
 					int clusterId = m_clusterList.get(i).getM_clusterId();
@@ -144,7 +144,7 @@ public class TraClusterDoc {
 
 						Geopoint point = new UTMPoint(study.getZoneNumber(), study.getZoneLetter(), x, y).toLatLong();
 
-						String values = studyId + "," + clusterId + "," + point.getLongitude() + "," + point.getLatitude() + x + "," + y;
+						String values = studyId + "," + clusterId + "," + x + "," + y + "," + point.getLongitude() + "," + point.getLatitude();
 
 						Statement statement = connection.createStatement();
 						statement.execute("INSERT INTO Traclus_Studies" + " VALUES (" + values + ")");

@@ -13,14 +13,6 @@ public class TraclusStudies {
     @Id
     private Integer clusterid;
 
-    @Column(name = "LONGITUDE", nullable = true, length = 22)
-    @Id
-    private double longitude;
-
-    @Column(name = "LATITUDE", nullable = true, length = 22)
-    @Id
-    private double latitude;
-
     @Column(name = "X", nullable = true, length = 22)
     @Id
     private double x;
@@ -29,13 +21,22 @@ public class TraclusStudies {
     @Id
     private double y;
 
-    public TraclusStudies(Integer studyid, Integer clusterid, double longitude, double latitude, double x, double y) {
+    @Column(name = "LONGITUDE", nullable = true, length = 22)
+    @Id
+    private double longitude;
+
+    @Column(name = "LATITUDE", nullable = true, length = 22)
+    @Id
+    private double latitude;
+
+
+    public TraclusStudies(Integer studyid, Integer clusterid, double x, double y, double longitude, double latitude) {
         this.studyid = studyid;
         this.clusterid = clusterid;
-        this.longitude = longitude;
-        this.latitude = latitude;
         this.x = x;
         this.y = y;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public TraclusStudies() {

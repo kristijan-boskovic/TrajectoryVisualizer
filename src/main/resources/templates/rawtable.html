@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head><!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Raw table</title>
+</head>
+
+<body>
+<script>
+    function myFunction() {
+        var ask = window.confirm("Are you sure you want to choose another study to be processed?");
+        if (ask) {
+            window.location.href = "/index";
+        }
+    }
+</script>
+
+<div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">TrajectoryVisualizer</a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/home">Study home</a></li>
+                    <li><a href="/index" onclick="myFunction(); return false;">Choose another study</a></li>
+                    <li><a href="#">About</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+    </nav>
+</div>
+<div class="container">
+<h2>Raw data</h2>
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>Study ID</th>
+        <th>Trajectory ID</th>
+        <th>X-coordinate</th>
+        <th>Y-coordinate</th>
+        <th>Longitude</th>
+        <th>Latitude</th>
+        <th>Date</th>
+        <th>Time</th>
+    </tr>
+    <tr th:each = "rawPoint: ${rawList}">
+        <td th:text="${rawPoint.studyid}"></td>
+        <td th:text="${rawPoint.trajid}"></td>
+        <td th:text="${rawPoint.x}"></td>
+        <td th:text="${rawPoint.y}"></td>
+        <td th:text="${rawPoint.longitude}"></td>
+        <td th:text="${rawPoint.latitude}"></td>
+        <td th:text="${rawPoint.day + '.' + rawPoint.month + '.' + rawPoint.year}"></td>
+        <td th:text="${rawPoint.hour + ':' + rawPoint.minute + ':' + rawPoint.second}"></td>
+    </tr>
+</table>
+
+    <!-- rawlist pagination -->
+    <nav aria-label="Pagination" th:if="${rawList.totalPages gt 0}">
+        <ul class="pagination justify-content-center font-weight-medium">
+            <li class="page-item" th:classappend="${rawList.number eq 0} ? 'disabled'">
+                <a class="page-link svg-icon"
+                   th:href="@{/rawtable?page={id}(id=${rawList.number lt 2 ? 1 : rawList.number})}"
+                   aria-label="Previous"
+                   title="Previous Page" rel="tooltip">
+                    <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i eq rawList.number + 1} ? 'active'"
+                th:each="i : ${#numbers.sequence( rawList.number + 1, rawList.totalPages > 10 + rawList.number ? rawList.number + 10 : rawList.totalPages, 1)}">
+                <a class="page-link" th:href="@{/rawtable?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}"
+                   rel="tooltip"></a>
+            </li>
+            <li class="page-item disabled" th:if="${rawList.number + 10 < rawList.totalPages}">
+                <a class="page-link svg-icon" href="#">
+                    <span data-feather="more-horizontal" width="20" height="20"></span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${rawList.number + 1 eq rawList.totalPages} ? 'disabled'">
+                <a class="page-link svg-icon" th:href="@{/rawtable?page={id}(id=${rawList.number + 2})}"
+                   aria-label="Next"
+                   title="Next Page" rel="tooltip">
+                    <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

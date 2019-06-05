@@ -30,7 +30,7 @@ public class Util {
 	    availableStudies.add(new Study("LifeTrack Whooper Swan Latvia", 92261778L, "Study: LifeTrack Whooper Swan Latvia", 34, 'V'));
         availableStudies.add(new Study("Toucan movement and seed dispersal", 2931895L, "Seed dispersal is critical to " +
                 "understanding forest dynamics but is hard to study because tracking seeds is difficult", 17, 'P'));
-        availableStudies.add(new Study("MPIO PNIC hurricane frigate tracking", 6770990L, "Understand how birds react to hurricans", 16, 'Q'));
+        availableStudies.add(new Study("MPIO PNIC hurricane frigate tracking", 6770990L, "Understand how birds react to hurricanes", 16, 'Q'));
         availableStudies.add(new Study("Striated Caracara Falkland Islands", 13978569L, "The movement and feeding ecology of the Striated Caracara, " +
                 "the world’s most southerly distributed raptor in its Falkland Islands stronghold", 20, 'F'));
         availableStudies.add(new Study("Navigation and migration in European mallards", 11017705L, "movements of the ducks via satellite " +
@@ -147,7 +147,7 @@ public class Util {
 
         try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + SID, USERNAME,
                 PASSWORD)) {
-            connection.prepareStatement("DELETE FROM RAW_STUDIES WHERE STUDYID = " + id).execute();
+            connection.prepareStatement("DELETE FROM RAW_STUDIES").execute();
 
 
             while ((line = br.readLine()) != null) {
@@ -155,7 +155,7 @@ public class Util {
                     String[] splitLine = line.split(",");
                     if (splitLine.length != 4 || splitLine[0].isEmpty() || splitLine[2].isEmpty()) continue;
 
-                    int trajectoryId = row / 1000;
+                    int trajectoryId = row / 600;
 
                      UTMPoint point = UTMPoint.latLong2UTM(Double.parseDouble(splitLine[3].replace(",", ".")), Double.parseDouble(splitLine[2].replace(",", ".")));
                      String x = String.valueOf(point.getEasting());
@@ -188,7 +188,7 @@ public class Util {
         br.close();
     }
 
-    public static HashMap<Integer, List<String>> trajectoriesToTraclusInput(String id) throws Exception {
+    public static HashMap<Integer, List<String>> trajectoriesToTraclusInput(long id) throws Exception {
         int trajID;
         String coordX;
         String coordY;

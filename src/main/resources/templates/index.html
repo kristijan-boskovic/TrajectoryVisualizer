@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>Oracle Movebank</title>
+    <title>TrajectoryVisualizer</title>
 </head>
 
 <body>
@@ -13,6 +13,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
+                <a class="navbar-brand">TrajectoryVisualizer</a>
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
                     <span class="sr-only">Toggle navigation</span>
@@ -23,29 +24,25 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="true">Studies<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Study #1</a></li>
-                            <li><a href="#">Study #2</a></li>
-                            <li><a href="#">Study #3</a></li>
-                        </ul>
-                    </li>
+                    <!--<li class="active"><a href="/index">Home</a></li>-->
                     <li><a href="#">About</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
     </nav>
-    <!-- Main component for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <!--Usage of models we wrote in WepAppController th:text="'Welcome to basic Bootstrap with Spring Boot created by ' + ${username} -->
-        <p>
-            <a class="btn btn-lg btn-primary" href="/table" role="button">Show data table</a>
-            <a class="btn btn-lg btn-primary" href="/map" role="button">Open map</a>
-        </p>
-    </div>
+
+        <form method="post" th:action="@{/}">
+            <div class="jumbotron" style="justify-content: center; background-color: white">
+                <h3>Please choose a study to be processed (with approximate process time):</h3>
+                    <input type="radio" name="studyId" value="92261778" onclick="popUp()" checked="checked"> LifeTrack whooper swan - Latvia [92261778] (~7 minutes)<br>
+                    <input type="radio" name="studyId" value="11017705"> Navigation and migration in European mallards [11017705] (~2 minutes)<br>
+                    <input type="radio" name="studyId" value="6770990"> MPIO PNIC hurricane frigate tracking [6770990] (~34 minutes)<br>
+                    <input type="radio" name="studyId" value="13978569"> Striated caracara - Falkland Islands [13978569] (~4 minutes)<br>
+                    <input type="radio" name="studyId" value="2931895"> Toucan movement and seed dispersal [2931895] (~10 seconds)<br>
+                <br>
+                <input type="submit" />
+            </div>
+        </form>
 </div>
 
 <!-- Optional JavaScript -->
