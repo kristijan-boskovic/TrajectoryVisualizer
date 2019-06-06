@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/ClusterGen.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class ClusterGen {
 	
 	public TraClusterDoc m_document;

@@ -12,6 +12,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/TraClusterDoc.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class TraClusterDoc {
 	
 	public int m_nDimensions;

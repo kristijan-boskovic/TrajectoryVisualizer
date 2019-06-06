@@ -2,6 +2,15 @@ package com.trajectoryvisualizer.util.traclus;
 
 import com.trajectoryvisualizer.util.Util;
 
+import static com.trajectoryvisualizer.controller.RawController.rawDao;
+
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/Main.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class Main {
 		
 	public static void main(long id) {
@@ -21,7 +30,7 @@ public class Main {
 			TraClusterDoc tcd = new TraClusterDoc();
 			try {
 
-				tcd.onOpenDocument(Util.trajectoriesToTraclusInput(id));
+				tcd.onOpenDocument(Util.trajectoriesToTraclusInput(id, rawDao));
 				TraClusterDoc.Parameter p = tcd.onEstimateParameter();
 
 				tcd.onClusterGenerate(id, p.epsParam, p.minLnsParam);

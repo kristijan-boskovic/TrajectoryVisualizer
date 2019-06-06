@@ -1,6 +1,9 @@
 package com.trajectoryvisualizer.user;
 import java.util.Base64;
 
+/**
+ * // TO DO
+ */
 public class User {
 
     private String username;

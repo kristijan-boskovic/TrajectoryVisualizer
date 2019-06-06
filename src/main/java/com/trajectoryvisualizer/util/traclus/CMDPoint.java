@@ -1,5 +1,12 @@
 package com.trajectoryvisualizer.util.traclus;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/CMDPoint.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class CMDPoint {
 	
 	

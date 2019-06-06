@@ -63,9 +63,9 @@
             }).addTo(mymap);
         </script>
 
+        <!-- Map of raw data -->
         <script th:inline="javascript">
             /*<![CDATA[*/
-
             var lineCoordinate = [];
             /*[# th:each="mapPoint : ${rawMapList}"]*/
             var longitude = /*[[${mapPoint.longitude}]]*/ 0;
@@ -81,14 +81,13 @@
             var coord = geojsonFeature.geometry.coordinates;
             lineCoordinate.push([coord[1],coord[0]]);
             /*[/]*/
-
             L.polyline(lineCoordinate, {color: 'red', weight: 1}).addTo(mymap);
             /*]]>*/
         </script>
 
+        <!-- Map of cluster data -->
         <script th:inline="javascript">
             /*<![CDATA[*/
-
             var lineCoordinate = [];
             /*[# th:each="mapPoint : ${clusterMapList}"]*/
             var longitude = /*[[${mapPoint.longitude}]]*/ 0;

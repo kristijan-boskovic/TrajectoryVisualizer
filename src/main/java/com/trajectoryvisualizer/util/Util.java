@@ -1,5 +1,7 @@
 package com.trajectoryvisualizer.util;
 
+import com.trajectoryvisualizer.dao.RawDao;
+import com.trajectoryvisualizer.entity.RawStudies;
 import com.trajectoryvisualizer.point.UTMPoint;
 import com.trajectoryvisualizer.user.Study;
 import com.trajectoryvisualizer.user.User;
@@ -15,7 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * // TO DO
+ */
 public class Util {
     private static final String SID = "orcl";
     private static final String USERNAME = "HERMES";
@@ -132,7 +136,7 @@ public class Util {
      * @throws Exception
      *             Throws exception if data cannot be accessed
      */
-    public static void insertIntoTable(long id) throws Exception {
+    public static void insertIntoTable(long id, RawDao rawDao) throws Exception {
         String stringUrl = Util.getStudyURL(id);
         URL url = new URL(stringUrl);
 
@@ -145,50 +149,87 @@ public class Util {
         String line;
         int row = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + SID, USERNAME,
-                PASSWORD)) {
-            connection.prepareStatement("DELETE FROM RAW_STUDIES").execute();
-
+        Map<String, List<RawStudies>> allStudies = new HashMap<>();
 
             while ((line = br.readLine()) != null) {
                 if (row != 0) {
                     String[] splitLine = line.split(",");
                     if (splitLine.length != 4 || splitLine[0].isEmpty() || splitLine[2].isEmpty()) continue;
 
-                    int trajectoryId = row / 600;
+//                    int trajectoryId = row / 600;
+                    int trajectoryId = 0;
 
-                     UTMPoint point = UTMPoint.latLong2UTM(Double.parseDouble(splitLine[3].replace(",", ".")), Double.parseDouble(splitLine[2].replace(",", ".")));
-                     String x = String.valueOf(point.getEasting());
-                     String y = String.valueOf(point.getNorthing());
+                    UTMPoint point = UTMPoint.latLong2UTM(Double.parseDouble(splitLine[3].replace(",", ".")), Double.parseDouble(splitLine[2].replace(",", ".")));
+//                     String x = String.valueOf(point.getEasting());
+//                     String y = String.valueOf(point.getNorthing());
+//
+//                    String lon = splitLine[2];
+//                    String lat = splitLine[3];
 
-                    String lon = splitLine[2];
-                    String lat = splitLine[3];
+                    double x = point.getEasting();
+                    double y = point.getNorthing();
+
+                    double lon = Double.valueOf(splitLine[2]);
+                    double lat = Double.valueOf(splitLine[3]);
+
 
                     String[] dateTime = splitLine[1].split(" ");
                     String[] date = dateTime[0].split("-");
                     String[] time = dateTime[1].split(":");
 
-                    String year = date[0];
-                    String month = date[1];
-                    String day = date[2];
-                    String hour = time[0];
-                    String minute = time[1];
-                    String second = String.valueOf((int) Math.round(Double.valueOf(time[2])));
+//                    String year = date[0];
+//                    String month = date[1];
+//                    String day = date[2];
+//                    String hour = time[0];
+//                    String minute = time[1];
+//                    String second = String.valueOf((int) Math.round(Double.valueOf(time[2])));
 
-                    String values = id + "," + trajectoryId + "," + lon + "," + lat + "," + x + "," + y + "," + year + "," + month + "," + day + "," + hour + "," + minute + "," + second;
+                    Integer year = Integer.valueOf(date[0]);
+                    Integer month = Integer.valueOf(date[1]);
+                    Integer day = Integer.valueOf(date[2]);
 
-                    Statement statement = connection.createStatement();
-                    statement.execute("INSERT INTO RAW_STUDIES" + " VALUES (" + values + ")");
-                    statement.close();
+                    Integer hour = Integer.valueOf(time[0]);
+                    Integer minute = Integer.valueOf(time[1]);
+                    Integer second = (int) Math.round(Double.valueOf(time[2]));
+
+//                    String values = id + "," + trajectoryId + "," + lon + "," + lat + "," + x + "," + y + "," + year + "," + month + "," + day + "," + hour + "," + minute + "," + second;
+//
+//                    Statement statement = connection.createStatement();
+//                    statement.execute("INSERT INTO RAW_STUDIES" + " VALUES (" + values + ")");
+//                    statement.close();
+
+                    RawStudies studyRow = new RawStudies(id, trajectoryId, lon, lat, x, y, year, month, day, hour, minute, second);
+
+                    String sl = splitLine[0];
+                    if (!allStudies.containsKey(sl)) {
+                        List<RawStudies> list = new ArrayList<>();
+                        list.add(studyRow);
+                        allStudies.put(sl, list);
+                    } else {
+                        allStudies.get(sl).add(studyRow);
+                    }
                 }
-
                 row++;
             }
-        }
+
         br.close();
+
+        int i = 0;
+        List<RawStudies> studies = new ArrayList<>();
+        for (String key : allStudies.keySet()) {
+            for (RawStudies study : allStudies.get(key)) {
+                study.setTrajid(i);
+                studies.add(study);
+            }
+            i++;
+        }
+
+        rawDao.deleteRawStudy();
+        rawDao.commit();
+        rawDao.saveAll(studies);
     }
 
-    public static HashMap<Integer, List<String>> trajectoriesToTraclusInput(long id) throws Exception {
+    public static HashMap<Integer, List<String>> trajectoriesToTraclusInput(long id, RawDao rawDao) throws Exception {
         int trajID;
         String coordX;
         String coordY;
@@ -196,33 +237,54 @@ public class Util {
 
         try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + "orcl", "HERMES",
                 "HERMES")) {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM RAW_STUDIES WHERE STUDYID = " + id);
+//            Statement st = connection.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM RAW_STUDIES WHERE STUDYID = " + id);
 
-            // iterate through the resultset
-            while (rs.next())
-            {
+            List<RawStudies> studies = rawDao.getPoints();
 
-                trajID = rs.getInt("TRAJECTORYID");
-                coordX = rs.getString("X").replace(',', '.'); // replacing all commas with dots in coordinates
-                coordY = rs.getString("Y").replace(',', '.');
+//            // iterate through the resultset
+//            while (rs.next())
+//            {
+//
+//                trajID = rs.getInt("TRAJECTORYID");
+//                coordX = rs.getString("X").replace(',', '.'); // replacing all commas with dots in coordinates
+//                coordY = rs.getString("Y").replace(',', '.');
+//
+//                // grouping coordinates by trajectory ID
+//                if (!trajMap.containsKey(trajID)) {
+//                    List<String> list = new ArrayList<String>();
+//                    list.add(coordX);
+//                    list.add(coordY);
+//                    trajMap.put(trajID, list);
+//                }
+//                else {
+//                    trajMap.get(trajID).add(coordX);
+//                    trajMap.get(trajID).add(coordY);
+//                }
+//            }
+//            rs.close();
+//            st.close();
+//        }
+//
+//        return trajMap;
 
-                // grouping coordinates by trajectory ID
+            for (RawStudies study : studies) {
+
+                trajID = study.getTrajid();
+                coordX = String.valueOf(study.getX());
+                coordY = String.valueOf(study.getY());
+
                 if (!trajMap.containsKey(trajID)) {
-                    List<String> list = new ArrayList<String>();
+                    List<String> list = new ArrayList<>();
                     list.add(coordX);
                     list.add(coordY);
                     trajMap.put(trajID, list);
-                }
-                else {
+                } else {
                     trajMap.get(trajID).add(coordX);
                     trajMap.get(trajID).add(coordY);
                 }
             }
-            rs.close();
-            st.close();
         }
-
         return trajMap;
     }
 }

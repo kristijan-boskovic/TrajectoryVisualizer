@@ -6,6 +6,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/MainFrame.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class MainFrame extends JFrame { 
 
 	private JPanel p = null;

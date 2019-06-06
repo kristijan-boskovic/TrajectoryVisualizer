@@ -3,6 +3,9 @@ package com.trajectoryvisualizer.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * // TO DO
+ */
 class CompositeKey implements Serializable {
     private double longitude;
     private double latitude;

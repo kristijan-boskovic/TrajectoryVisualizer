@@ -3,7 +3,7 @@ package com.trajectoryvisualizer.point;
 /**
  * Derived from: cgeo/main/src/cgeo/geocaching/location/Geopoint.java
  *
- * Adapted to this project by Filip Karacic
+ * Adapted to this project by Kristijan Boskovic
  *
  * Representation of geographic point.
  */

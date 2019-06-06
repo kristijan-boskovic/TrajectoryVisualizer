@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * // TO DO
+ */
 @Controller
 public class RawController {
-    static RawDao rawDao;
+    public static RawDao rawDao;
 
     public RawController(RawDao rawDao) {
         RawController.rawDao = rawDao;

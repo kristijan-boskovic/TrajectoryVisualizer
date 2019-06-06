@@ -3,7 +3,7 @@ package com.trajectoryvisualizer.point;
 /**
  * Derived from: cgeo/main/src/cgeo/geocaching/location/UTMPoint.java
  *
- * Adapted to this project by Filip Karacic
+ * Adapted to this project by Kristijan Boskovic
  *
  * A class representing a UTM co-ordinate.
  *

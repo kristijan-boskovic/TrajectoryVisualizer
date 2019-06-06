@@ -71,7 +71,7 @@
     <nav aria-label="Pagination" th:if="${rawList.totalPages gt 0}">
         <ul class="pagination justify-content-center font-weight-medium">
             <li class="page-item" th:classappend="${rawList.number eq 0} ? 'disabled'">
-                <a class="page-link svg-icon"
+                <a class="page-link glyphicon glyphicon-chevron-left"
                    th:href="@{/rawtable?page={id}(id=${rawList.number lt 2 ? 1 : rawList.number})}"
                    aria-label="Previous"
                    title="Previous Page" rel="tooltip">
@@ -85,12 +85,12 @@
                    rel="tooltip"></a>
             </li>
             <li class="page-item disabled" th:if="${rawList.number + 10 < rawList.totalPages}">
-                <a class="page-link svg-icon" href="#">
+                <a class="page-link glyphicon glyphicon-option-horizontal" href="#">
                     <span data-feather="more-horizontal" width="20" height="20"></span>
                 </a>
             </li>
             <li class="page-item" th:classappend="${rawList.number + 1 eq rawList.totalPages} ? 'disabled'">
-                <a class="page-link svg-icon" th:href="@{/rawtable?page={id}(id=${rawList.number + 2})}"
+                <a class="page-link glyphicon glyphicon-chevron-right" th:href="@{/rawtable?page={id}(id=${rawList.number + 2})}"
                    aria-label="Next"
                    title="Next Page" rel="tooltip">
                     <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>

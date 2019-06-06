@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * // TO DO
+ */
 public class Hermes {
     private static final String SID = "orcl";
     private static final String USERNAME = "HERMES";

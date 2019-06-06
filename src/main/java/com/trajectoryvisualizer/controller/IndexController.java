@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
+import static com.trajectoryvisualizer.controller.RawController.rawDao;
+
+/**
+ * // TO DO
+ */
 @Controller
 @RequestMapping({"/", "/index"})
 public class IndexController {
@@ -21,7 +26,7 @@ public class IndexController {
 	@RequestMapping(method = RequestMethod.POST)
 	public RedirectView studyChosen(@RequestParam("studyId") String studyId) {
 		try {
-			Util.insertIntoTable(Long.valueOf(studyId));
+			Util.insertIntoTable(Long.valueOf(studyId), rawDao);
 			Hermes.loadStudy(Long.valueOf(studyId));
 			Main.main(Long.valueOf(studyId));
 		} catch(Exception e){

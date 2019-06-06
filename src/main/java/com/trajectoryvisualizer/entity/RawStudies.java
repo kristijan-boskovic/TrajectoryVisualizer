@@ -2,16 +2,19 @@ package com.trajectoryvisualizer.entity;
 
 import javax.persistence.*;
 
+/**
+ * // TO DO
+ */
 @Entity
 @IdClass(CompositeKey.class)
 @Table(name = "RAW_STUDIES")
 public class RawStudies {
     @Column(name = "STUDYID", nullable = true, length = 38)
-    private Integer studyid;
+    private long studyid;
 
     @Column(name = "TRAJECTORYID", nullable = true, length = 38)
     @Id
-    private Integer trajid;
+    private int trajid;
 
     @Column(name = "LONGITUDE", nullable = true, length = 22)
     @Id
@@ -47,8 +50,9 @@ public class RawStudies {
     @Column(name = "SECOND", nullable = true, length = 38)
     private Integer second;
 
-    public RawStudies(Integer trajid, double longitude, double latitude, double x, double y, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
+    public RawStudies(long studyid, int trajid, double longitude, double latitude, double x, double y, Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
         super();
+        this.studyid = studyid;
         this.trajid = trajid;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -66,19 +70,19 @@ public class RawStudies {
         super();
     }
 
-    public Integer getStudyid() {
+    public long getStudyid() {
         return studyid;
     }
 
-    public void setStudyid(Integer studyid) {
+    public void setStudyid(long studyid) {
         this.studyid = studyid;
     }
 
-    public Integer getTrajid() {
+    public int getTrajid() {
         return trajid;
     }
 
-    public void setTrajid(Integer trajid) {
+    public void setTrajid(int trajid) {
         this.trajid = trajid;
     }
 

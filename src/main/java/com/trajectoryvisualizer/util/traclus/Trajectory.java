@@ -2,6 +2,13 @@ package com.trajectoryvisualizer.util.traclus;
 
 import java.util.ArrayList;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/Trajectory.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class Trajectory {	
 	
 	private int m_trajectoryId;	// the identifier of this trajectory

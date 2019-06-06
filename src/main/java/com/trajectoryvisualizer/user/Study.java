@@ -2,6 +2,9 @@ package com.trajectoryvisualizer.user;
 
 import com.trajectoryvisualizer.util.Util;
 
+/**
+ * // TO DO
+ */
 public class Study {
     private String name;
     private String URL;

@@ -3,6 +3,13 @@ package com.trajectoryvisualizer.util.traclus;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+/**
+ * Derived from: https://github.com/luborliu/TraClusAlgorithm/blob/master/src/boliu/Cluster.java
+ *
+ * Adapted to this project by Kristijan Boskovic
+ *
+ * // TO DO
+ */
 public class Cluster {
 	
 	private int m_clusterId;		// the identifier of this cluster
