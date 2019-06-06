@@ -1,6 +1,7 @@
 package com.trajectoryvisualizer.util.traclus;
 
 
+import com.trajectoryvisualizer.entity.TraclusStudies;
 import com.trajectoryvisualizer.point.Geopoint;
 import com.trajectoryvisualizer.point.UTMPoint;
 import com.trajectoryvisualizer.user.Study;
@@ -108,7 +109,7 @@ public class TraClusterDoc {
 		return true;
 	}
 
-	boolean onClusterGenerate(long studyId, double epsParam, int minLnsParam) {
+	Map<String, List<TraclusStudies>> onClusterGenerate(long studyId, double epsParam, int minLnsParam, Map<String, List<TraclusStudies>> traclusMap) {
 
 		ClusterGen generator = new ClusterGen(this);
 
@@ -120,27 +121,26 @@ public class TraClusterDoc {
 		if (!generator.partitionTrajectory())
 		{
 			System.out.println("Unable to partition a trajectory\n");
-			return false;
+			return traclusMap;
 		}
 
 		// SECOND STEP: Density-based Clustering
 		if (!generator.performDBSCAN(epsParam, minLnsParam))
 		{
 			System.out.println("Unable to perform the DBSCAN algorithm\n");
-			return false;
+			return traclusMap;
 		}
 
 		// THIRD STEP: Cluster Construction
 		if (!generator.constructCluster())
 		{
 			System.out.println( "Unable to construct a cluster\n");
-			return false;
+			return traclusMap;
 		}
 
-		try(Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + "orcl", "HERMES",
-				"HERMES")){
-			connection.prepareStatement("DELETE FROM Traclus_Studies").execute();
-				Study study = Util.getStudy(Long.valueOf(studyId));
+		try {
+				Geopoint point;
+				Study study = Util.getStudy(studyId);
 				for (int i = 0; i < m_clusterList.size(); i++) {
 					int clusterId = m_clusterList.get(i).getM_clusterId();
 
@@ -149,22 +149,28 @@ public class TraClusterDoc {
 						double x = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(0);
 						double y = m_clusterList.get(i).getM_PointArray().get(j).getM_coordinate(1);
 
-						Geopoint point = new UTMPoint(study.getZoneNumber(), study.getZoneLetter(), x, y).toLatLong();
+						if(study.getOtherZone() != null && Double.compare(x, study.getValueOther()) >= 0){
+							point = new UTMPoint(study.getOtherZone(), study.getZoneLetter(), x, y).toLatLong();
+						}else{
+							point = new UTMPoint(study.getZoneNumber(), study.getZoneLetter(), x, y).toLatLong();
+						}
 
-						String values = studyId + "," + clusterId + "," + x + "," + y + "," + point.getLongitude() + "," + point.getLatitude();
+						TraclusStudies studyRow = new TraclusStudies(studyId, clusterId, x, y, point.getLongitude(), point.getLatitude());
 
-						Statement statement = connection.createStatement();
-						statement.execute("INSERT INTO Traclus_Studies" + " VALUES (" + values + ")");
-						statement.close();
-
+						if (!traclusMap.containsKey(String.valueOf(clusterId))) {
+							List<TraclusStudies> list = new ArrayList<>();
+							list.add(studyRow);
+							traclusMap.put(String.valueOf(clusterId), list);
+						} else {
+							traclusMap.get(String.valueOf(clusterId)).add(studyRow);
+						}
 					}
 				}
 
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-		return true;
+		return traclusMap;
 	}
 	
 	Parameter onEstimateParameter() {
@@ -180,5 +186,4 @@ public class TraClusterDoc {
 		}
 		return p;
 	}
-
 }

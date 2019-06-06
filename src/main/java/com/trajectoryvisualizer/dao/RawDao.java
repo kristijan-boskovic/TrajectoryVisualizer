@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Repository
 public interface RawDao extends JpaRepository<RawStudies, Integer> {
+
     @Query(value = "select * from raw_studies ORDER BY trajectoryId, year, month, day, hour, minute, second", nativeQuery = true)
     Page<RawStudies> findAll(Pageable var1);
 

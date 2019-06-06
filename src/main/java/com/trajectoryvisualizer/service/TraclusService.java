@@ -12,9 +12,9 @@ import java.util.List;
  */
 @Service
 public class TraclusService {
+
     @Autowired
     ClusterDao clusterDao;
-
     public List<TraclusStudies> getAllTraclusData() {
         return this.clusterDao.findAll();
     }

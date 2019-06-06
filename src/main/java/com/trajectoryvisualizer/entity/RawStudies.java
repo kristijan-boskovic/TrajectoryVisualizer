@@ -9,6 +9,7 @@ import javax.persistence.*;
 @IdClass(CompositeKey.class)
 @Table(name = "RAW_STUDIES")
 public class RawStudies {
+
     @Column(name = "STUDYID", nullable = true, length = 38)
     private long studyid;
 

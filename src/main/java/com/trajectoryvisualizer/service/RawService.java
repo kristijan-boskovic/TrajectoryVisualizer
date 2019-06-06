@@ -12,9 +12,9 @@ import java.util.List;
  */
 @Service
 public class RawService {
+
     @Autowired
     RawDao rawDao;
-
     public List<RawStudies> getAllRawData() {
         return this.rawDao.findAll();
     }

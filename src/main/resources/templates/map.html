@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head><!-- Required meta tags -->
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -43,8 +43,8 @@
                     <li class="active"><a href="/home">Study home</a></li>
                     <li><a href="/index" onclick="myFunction(); return false;">Choose another study</a></li>
                 </ul>
-            </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
+            </div>
+        </div>
     </nav>
 </div>
 
@@ -66,10 +66,11 @@
         <!-- Map of raw data -->
         <script th:inline="javascript">
             /*<![CDATA[*/
+            /*[# th:each="rawMapPoint : ${rawMap}"]*/
             var lineCoordinate = [];
-            /*[# th:each="mapPoint : ${rawMapList}"]*/
-            var longitude = /*[[${mapPoint.longitude}]]*/ 0;
-            var latitude = /*[[${mapPoint.latitude}]]*/ 0;
+            /*[# th:each="rawPoint : ${rawMapPoint.value}"]*/
+            var longitude = /*[[${rawPoint.longitude}]]*/ 0;
+            var latitude = /*[[${rawPoint.latitude}]]*/ 0;
             var geojsonFeature = {
                 "type": "Feature",
                 "properties": {},
@@ -82,16 +83,20 @@
             lineCoordinate.push([coord[1],coord[0]]);
             /*[/]*/
             L.polyline(lineCoordinate, {color: 'red', weight: 1}).addTo(mymap);
+            /*[/]*/
             /*]]>*/
+            mymap.panTo(new L.LatLng(latitude, longitude));
         </script>
+
 
         <!-- Map of cluster data -->
         <script th:inline="javascript">
             /*<![CDATA[*/
+            /*[# th:each="traclusMapPoint : ${traclusMap}"]*/
             var lineCoordinate = [];
-            /*[# th:each="mapPoint : ${clusterMapList}"]*/
-            var longitude = /*[[${mapPoint.longitude}]]*/ 0;
-            var latitude = /*[[${mapPoint.latitude}]]*/ 0;
+            /*[# th:each="traclusPoint : ${traclusMapPoint.value}"]*/
+            var longitude = /*[[${traclusPoint.longitude}]]*/ 0;
+            var latitude = /*[[${traclusPoint.latitude}]]*/ 0;
             var geojsonFeature = {
                 "type": "Feature",
                 "properties": {},
@@ -103,8 +108,8 @@
             var coord = geojsonFeature.geometry.coordinates;
             lineCoordinate.push([coord[1],coord[0]]);
             /*[/]*/
-
-            L.polyline(lineCoordinate, {color: 'yellow', weight: 3}).addTo(mymap);
+            L.polyline(lineCoordinate, {color: 'yellow', weight: 4}).addTo(mymap);
+            /*[/]*/
             /*]]>*/
             mymap.panTo(new L.LatLng(latitude, longitude));
         </script>

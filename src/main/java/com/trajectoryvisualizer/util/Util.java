@@ -31,15 +31,14 @@ public class Util {
 	static {
 	    availableStudies = new ArrayList<>();
 
-	    availableStudies.add(new Study("LifeTrack Whooper Swan Latvia", 92261778L, "Study: LifeTrack Whooper Swan Latvia", 34, 'V'));
+        availableStudies.add(new Study("LifeTrack Whooper Swan Latvia", 92261778L, "Study: LifeTrack Whooper Swan Latvia", 34, 'V', 9, null, null));
         availableStudies.add(new Study("Toucan movement and seed dispersal", 2931895L, "Seed dispersal is critical to " +
-                "understanding forest dynamics but is hard to study because tracking seeds is difficult", 17, 'P'));
-        availableStudies.add(new Study("MPIO PNIC hurricane frigate tracking", 6770990L, "Understand how birds react to hurricanes", 16, 'Q'));
+                "understanding forest dynamics but is hard to study because tracking seeds is difficult", 17, 'P',15, null, null));
+        availableStudies.add(new Study("MPIO PNIC hurricane frigate tracking", 6770990L, "Understand how birds react to hurricans", 16, 'Q', 6, 15, 661000.00));
         availableStudies.add(new Study("Striated Caracara Falkland Islands", 13978569L, "The movement and feeding ecology of the Striated Caracara, " +
-                "the world’s most southerly distributed raptor in its Falkland Islands stronghold", 20, 'F'));
+                "the world’s most southerly distributed raptor in its Falkland Islands stronghold", 20, 'F', 9, null, null));
         availableStudies.add(new Study("Navigation and migration in European mallards", 11017705L, "movements of the ducks via satellite " +
-                "GPS-tracking", 32, 'U'));
-
+                "GPS-tracking", 32, 'U', 11, 33, 580000.00));
     }
 
     /**
@@ -65,68 +64,7 @@ public class Util {
                 return study;
             }
         }
-
         return null;
-    }
-
-    public static List<Double[]> getPoints(long id){
-        try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + SID, USERNAME,
-                PASSWORD)) {
-            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery("SELECT * FROM Raw_Studies WHERE studyid = " + id);
-
-            List<Double[]> points = new ArrayList<>();
-
-            double lon, lat;
-            while (rs.next())
-            {
-                lon = rs.getDouble("Longitude"); // replacing all commas with dots in coordinates
-                lat = rs.getDouble("Latitude");
-
-                points.add(new Double[]{lon, lat});
-            }
-            rs.close();
-            st.close();
-
-            return points;
-        }catch (SQLException e){
-            return null;
-        }
-    }
-
-    public static Map<Integer,List<Double[]>> getClusters(long id){
-        try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + SID, USERNAME,
-                PASSWORD)) {
-            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery("SELECT * FROM Traclus_Studies WHERE studyid = " + id);
-
-            Map<Integer, List<Double[]>> clusters = new HashMap<>();
-            int clusterId;
-            double lon, lat;
-            while (rs.next())
-            {
-                clusterId = rs.getInt("clusterId");
-                lon = rs.getDouble("longitude");
-                lat = rs.getDouble("latitude");
-
-                if (!clusters.containsKey(clusterId)) {
-                    List<Double[]> list = new ArrayList<>();
-                    list.add(new Double[]{lon, lat});
-                    clusters.put(clusterId, list);
-                }
-                else {
-                    clusters.get(clusterId).add(new Double[]{lon, lat});
-                }
-            }
-            rs.close();
-            st.close();
-
-            return clusters;
-        }catch (SQLException e){
-            return null;
-        }
     }
 
     /**
@@ -136,7 +74,7 @@ public class Util {
      * @throws Exception
      *             Throws exception if data cannot be accessed
      */
-    public static void insertIntoTable(long id, RawDao rawDao) throws Exception {
+    public static Map<String, List<RawStudies>> insertIntoTable(long id, RawDao rawDao, Map<String, List<RawStudies>> rawMap) throws Exception {
         String stringUrl = Util.getStudyURL(id);
         URL url = new URL(stringUrl);
 
@@ -149,75 +87,51 @@ public class Util {
         String line;
         int row = 0;
 
-        Map<String, List<RawStudies>> allStudies = new HashMap<>();
+        while ((line = br.readLine()) != null) {
+            if (row != 0) {
+                String[] splitLine = line.split(",");
+                if (splitLine.length != 4 || splitLine[0].isEmpty() || splitLine[2].isEmpty()) continue;
+                int trajectoryId = 0;
 
-            while ((line = br.readLine()) != null) {
-                if (row != 0) {
-                    String[] splitLine = line.split(",");
-                    if (splitLine.length != 4 || splitLine[0].isEmpty() || splitLine[2].isEmpty()) continue;
+                UTMPoint point = UTMPoint.latLong2UTM(Double.parseDouble(splitLine[3].replace(",", ".")), Double.parseDouble(splitLine[2].replace(",", ".")));
+                double x = point.getEasting();
+                double y = point.getNorthing();
 
-//                    int trajectoryId = row / 600;
-                    int trajectoryId = 0;
-
-                    UTMPoint point = UTMPoint.latLong2UTM(Double.parseDouble(splitLine[3].replace(",", ".")), Double.parseDouble(splitLine[2].replace(",", ".")));
-//                     String x = String.valueOf(point.getEasting());
-//                     String y = String.valueOf(point.getNorthing());
-//
-//                    String lon = splitLine[2];
-//                    String lat = splitLine[3];
-
-                    double x = point.getEasting();
-                    double y = point.getNorthing();
-
-                    double lon = Double.valueOf(splitLine[2]);
-                    double lat = Double.valueOf(splitLine[3]);
+                double lon = Double.valueOf(splitLine[2]);
+                double lat = Double.valueOf(splitLine[3]);
 
 
-                    String[] dateTime = splitLine[1].split(" ");
-                    String[] date = dateTime[0].split("-");
-                    String[] time = dateTime[1].split(":");
+                String[] dateTime = splitLine[1].split(" ");
+                String[] date = dateTime[0].split("-");
+                String[] time = dateTime[1].split(":");
 
-//                    String year = date[0];
-//                    String month = date[1];
-//                    String day = date[2];
-//                    String hour = time[0];
-//                    String minute = time[1];
-//                    String second = String.valueOf((int) Math.round(Double.valueOf(time[2])));
+                Integer year = Integer.valueOf(date[0]);
+                Integer month = Integer.valueOf(date[1]);
+                Integer day = Integer.valueOf(date[2]);
 
-                    Integer year = Integer.valueOf(date[0]);
-                    Integer month = Integer.valueOf(date[1]);
-                    Integer day = Integer.valueOf(date[2]);
+                Integer hour = Integer.valueOf(time[0]);
+                Integer minute = Integer.valueOf(time[1]);
+                Integer second = (int) Math.round(Double.valueOf(time[2]));
 
-                    Integer hour = Integer.valueOf(time[0]);
-                    Integer minute = Integer.valueOf(time[1]);
-                    Integer second = (int) Math.round(Double.valueOf(time[2]));
+                RawStudies studyRow = new RawStudies(id, trajectoryId, lon, lat, x, y, year, month, day, hour, minute, second);
 
-//                    String values = id + "," + trajectoryId + "," + lon + "," + lat + "," + x + "," + y + "," + year + "," + month + "," + day + "," + hour + "," + minute + "," + second;
-//
-//                    Statement statement = connection.createStatement();
-//                    statement.execute("INSERT INTO RAW_STUDIES" + " VALUES (" + values + ")");
-//                    statement.close();
-
-                    RawStudies studyRow = new RawStudies(id, trajectoryId, lon, lat, x, y, year, month, day, hour, minute, second);
-
-                    String sl = splitLine[0];
-                    if (!allStudies.containsKey(sl)) {
-                        List<RawStudies> list = new ArrayList<>();
-                        list.add(studyRow);
-                        allStudies.put(sl, list);
-                    } else {
-                        allStudies.get(sl).add(studyRow);
-                    }
+                String sl = splitLine[0];
+                if (!rawMap.containsKey(sl)) {
+                    List<RawStudies> list = new ArrayList<>();
+                    list.add(studyRow);
+                    rawMap.put(sl, list);
+                } else {
+                    rawMap.get(sl).add(studyRow);
                 }
-                row++;
             }
-
+            row++;
+        }
         br.close();
 
         int i = 0;
         List<RawStudies> studies = new ArrayList<>();
-        for (String key : allStudies.keySet()) {
-            for (RawStudies study : allStudies.get(key)) {
+        for (String key : rawMap.keySet()) {
+            for (RawStudies study : rawMap.get(key)) {
                 study.setTrajid(i);
                 studies.add(study);
             }
@@ -227,6 +141,8 @@ public class Util {
         rawDao.deleteRawStudy();
         rawDao.commit();
         rawDao.saveAll(studies);
+
+        return rawMap;
     }
 
     public static HashMap<Integer, List<String>> trajectoriesToTraclusInput(long id, RawDao rawDao) throws Exception {
@@ -235,41 +151,9 @@ public class Util {
         String coordY;
         HashMap<Integer, List<String>> trajMap = new HashMap<Integer, List<String>>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:" + "orcl", "HERMES",
-                "HERMES")) {
-//            Statement st = connection.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM RAW_STUDIES WHERE STUDYID = " + id);
-
+        try {
             List<RawStudies> studies = rawDao.getPoints();
-
-//            // iterate through the resultset
-//            while (rs.next())
-//            {
-//
-//                trajID = rs.getInt("TRAJECTORYID");
-//                coordX = rs.getString("X").replace(',', '.'); // replacing all commas with dots in coordinates
-//                coordY = rs.getString("Y").replace(',', '.');
-//
-//                // grouping coordinates by trajectory ID
-//                if (!trajMap.containsKey(trajID)) {
-//                    List<String> list = new ArrayList<String>();
-//                    list.add(coordX);
-//                    list.add(coordY);
-//                    trajMap.put(trajID, list);
-//                }
-//                else {
-//                    trajMap.get(trajID).add(coordX);
-//                    trajMap.get(trajID).add(coordY);
-//                }
-//            }
-//            rs.close();
-//            st.close();
-//        }
-//
-//        return trajMap;
-
             for (RawStudies study : studies) {
-
                 trajID = study.getTrajid();
                 coordX = String.valueOf(study.getX());
                 coordY = String.valueOf(study.getY());
@@ -284,6 +168,8 @@ public class Util {
                     trajMap.get(trajID).add(coordY);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return trajMap;
     }

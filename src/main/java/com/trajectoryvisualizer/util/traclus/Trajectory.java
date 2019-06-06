@@ -95,7 +95,4 @@ public class Trajectory {
 	public void setM_partitionPointArray(ArrayList<CMDPoint> m_partitionPointArray) {
 		this.m_partitionPointArray = m_partitionPointArray;
 	}
-
-
- 
 }

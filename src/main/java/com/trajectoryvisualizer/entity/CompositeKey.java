@@ -7,6 +7,7 @@ import java.util.Objects;
  * // TO DO
  */
 class CompositeKey implements Serializable {
+
     private double longitude;
     private double latitude;
     private double x;

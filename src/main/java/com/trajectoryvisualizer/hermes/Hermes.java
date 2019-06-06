@@ -35,7 +35,6 @@ public class Hermes {
             System.out.println("Connection failure.");
             e.printStackTrace();
         }
-
     }
 
     private static boolean bulkData(Connection connection, long id) {
@@ -76,6 +75,5 @@ public class Hermes {
             System.out.println("Error loading data into Oracle database. Quit loading.");
             return false;
         }
-
     }
 }

@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class RawController {
-    public static RawDao rawDao;
 
+    public static RawDao rawDao;
     public RawController(RawDao rawDao) {
         RawController.rawDao = rawDao;
     }

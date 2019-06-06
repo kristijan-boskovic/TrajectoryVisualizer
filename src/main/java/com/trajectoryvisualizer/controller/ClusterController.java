@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 public class ClusterController {
-    static ClusterDao clusterDao;
 
+    public static ClusterDao clusterDao;
     public ClusterController(ClusterDao clusterDao) {
         ClusterController.clusterDao = clusterDao;
     }
