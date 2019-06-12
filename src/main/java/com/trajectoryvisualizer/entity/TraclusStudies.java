@@ -3,7 +3,7 @@ package com.trajectoryvisualizer.entity;
 import javax.persistence.*;
 
 /**
- * // TO DO
+ * Entity for cluster data.
  */
 @Entity
 @IdClass(CompositeKey.class)

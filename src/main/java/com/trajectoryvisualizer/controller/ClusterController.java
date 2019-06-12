@@ -1,7 +1,6 @@
 package com.trajectoryvisualizer.controller;
 
 import com.trajectoryvisualizer.dao.ClusterDao;
-import com.trajectoryvisualizer.dao.RawDao;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * // TO DO
+ * Displays cluster data table.
  */
 @Controller
 public class ClusterController {

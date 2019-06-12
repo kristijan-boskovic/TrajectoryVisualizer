@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * // TO DO
+ * Composite key for RawStudies and TraclusStudies entities.
  */
 class CompositeKey implements Serializable {
 

@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * // TO DO
+ * Loads data into database using Hermes@Oracle MOD.
  */
 public class Hermes {
     private static final String SID = "orcl";

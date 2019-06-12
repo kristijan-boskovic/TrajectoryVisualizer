@@ -3,7 +3,7 @@ package com.trajectoryvisualizer.user;
 import com.trajectoryvisualizer.util.Util;
 
 /**
- * // TO DO
+ * Study class.
  */
 public class Study {
 

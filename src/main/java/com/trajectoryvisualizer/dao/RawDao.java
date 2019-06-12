@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * // TO DO
+ * Defines methods for managing raw data.
  */
 @Repository
 public interface RawDao extends JpaRepository<RawStudies, Integer> {

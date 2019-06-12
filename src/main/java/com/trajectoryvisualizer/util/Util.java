@@ -11,14 +11,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * // TO DO
+ * Gets study data from Movebank and loads study into database.
  */
 public class Util {
     private static final String SID = "orcl";
@@ -34,18 +33,8 @@ public class Util {
         availableStudies.add(new Study("LifeTrack Whooper Swan Latvia", 92261778L, "Study: LifeTrack Whooper Swan Latvia", 34, 'V', 9, null, null));
         availableStudies.add(new Study("Toucan movement and seed dispersal", 2931895L, "Seed dispersal is critical to " +
                 "understanding forest dynamics but is hard to study because tracking seeds is difficult", 17, 'P',15, null, null));
-        availableStudies.add(new Study("MPIO PNIC hurricane frigate tracking", 6770990L, "Understand how birds react to hurricans", 16, 'Q', 6, 15, 661000.00));
         availableStudies.add(new Study("Striated Caracara Falkland Islands", 13978569L, "The movement and feeding ecology of the Striated Caracara, " +
                 "the world’s most southerly distributed raptor in its Falkland Islands stronghold", 20, 'F', 9, null, null));
-        availableStudies.add(new Study("Navigation and migration in European mallards", 11017705L, "movements of the ducks via satellite " +
-                "GPS-tracking", 32, 'U', 11, 33, 580000.00));
-    }
-
-    /**
-     * @return Array of accessable movebank study ids
-     */
-    public static List<Study> getAvailableStudies() {
-        return availableStudies;
     }
 
     /**

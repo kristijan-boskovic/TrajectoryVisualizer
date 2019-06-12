@@ -9,7 +9,7 @@ import static com.trajectoryvisualizer.controller.IndexController.rawMap;
 import static com.trajectoryvisualizer.controller.IndexController.traclusMap;
 
 /**
- * // TO DO
+ * Displays map with raw and cluster data.
  */
 @Controller
 public class TrajectoryController {

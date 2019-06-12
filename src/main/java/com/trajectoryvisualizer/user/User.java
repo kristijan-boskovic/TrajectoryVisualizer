@@ -2,7 +2,7 @@ package com.trajectoryvisualizer.user;
 import java.util.Base64;
 
 /**
- * // TO DO
+ * User class.
  */
 public class User {
 

@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * // TO DO
+ * Defines methods for managing cluster data.
  */
 @Repository
 public interface ClusterDao extends JpaRepository<TraclusStudies, Integer> {

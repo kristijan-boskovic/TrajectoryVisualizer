@@ -53,6 +53,8 @@
 
     <div id="mapid">
         <style>#mapid { height: 700px; width: 1100px}</style>
+
+        <!-- Map initialization -->
         <script>
             var mymap = L.map('mapid').setView([10, 20], 15);
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

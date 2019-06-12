@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * // TO DO
+ * Displays raw data table.
  */
 @Controller
 public class RawController {

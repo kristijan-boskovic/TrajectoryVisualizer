@@ -17,7 +17,7 @@ import java.util.Map;
 import static com.trajectoryvisualizer.controller.RawController.rawDao;
 
 /**
- * // TO DO
+ * Processes the chosen study and redirects to study home page.
  */
 @Controller
 @RequestMapping({"/", "/index"})

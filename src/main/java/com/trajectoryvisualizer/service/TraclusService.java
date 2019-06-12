@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * // TO DO
+ * Gets all cluster data.
  */
 @Service
 public class TraclusService {
