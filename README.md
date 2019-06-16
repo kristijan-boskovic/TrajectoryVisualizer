@@ -8,4 +8,4 @@ Installation instructions:
 4. Import this project into your IDE and build the application.
 5. Start the SpringBootOracleApplication.java class.
 6. Open your localhost in any browser, by default it is: http://localhost:8080.
-7. TrajectoryVisualizer application should be running. Your can use the application now!
+7. TrajectoryVisualizer application should be running. You can use the application now!
