@@ -1,5 +1,12 @@
 # TrajectoryVisualizer
-Thesis project @ FER (2018/19)
+TrajectoryVisualizer is a web application made for clustering certain data from Movebank database of animal tracking data (https://www.movebank.org/) and then visualizing those clusters on a map. Screenshots of using the application are shown below.
+
+
+![alt text](http://www.deviantpics.com/images/2019/07/10/slika18.png)
+![alt text](http://www.deviantpics.com/images/2019/07/10/slika19.png)
+![alt text](http://www.deviantpics.com/images/2019/07/10/slika20.png)
+![alt text](http://www.deviantpics.com/images/2019/07/10/slika21.png)
+
 
 Installation instructions:
 1. Install Oracle Database 11g (https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-win64soft-094461.html).
